@@ -389,7 +389,7 @@ class CORECONFModel(ModelSID):
                 if not to_cbor and isinstance(leaf, bytes):
                     return leaf.hex()
                 else:
-                    return leaf
+                    return bytes.fromhex(leaf)
             elif dtype in ["empty", "leafref", "instance-identifier"]: # just return obj
                 _logger.warning("Data type %s not yet handled; returning value as-is.", dtype)
                 return leaf
