@@ -560,12 +560,19 @@ class CORECONFModel(ModelSID):
                     node_identifier = identifier[len(current_path):].lstrip("/")
                     current_value[node_identifier] = _ValueWrapper(current_value.pop(key))
                     stack.append((current_value[node_identifier], sid, identifier))
-        
+
             # current_value is a list type, append each of the object in currentValue to the stack
             elif type(current_value) is list:
                 for i in range(len(current_value)):
                     current_value[i] = _ValueWrapper(current_value[i])
                     stack.append((current_value[i], current_delta, current_path))
+
+            # current_value can be None if you fetch an value that has not yet
+            # been populated. i.e. the yang model for the device supports it,
+            # but currently it is empty. Imagine a list that has no entries
+            # added
+            elif current_value is None:
+                current_object.value = None
 
             # current_value is a leaf here, transform their datatype before adding to the current_object
             else:
